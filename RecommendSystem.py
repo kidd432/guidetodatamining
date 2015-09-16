@@ -87,8 +87,32 @@ def pearsonCorrelation(obj1,obj2):
         return upper/down
 
 
+def cosineSimilarity(obj1,obj2):
+    upper =0 ;
+    down = 0;
+    obj1_degree=0;
+    obj2_degree=0;
+    for key1 in obj1:
+        if key1 in obj2:
+            upper+=obj1[key1]*obj2[key1]
+            obj1_degree += math.pow(obj1[key1],2)
+            obj2_degree += math.pow(obj2[key1],2)
+        if key1 not in obj2:
+            obj2[key1]=0;
+            upper+=obj1[key1]*obj2[key1]
+            obj1_degree += math.pow(obj1[key1],2)
+            obj2_degree += math.pow(obj2[key1],2)
+
+    down = math.sqrt(obj1_degree)*math.sqrt(obj2_degree)
+
+    if down==0:
+        return 0;
+    else:
+        return upper/down
+
 print(ManhattanDistance(users['Hailey'],users['Veronica']))
 print(EuclideanDistance(users['Hailey'],users['Jordyn']))
 print(findNearestUser("Hailey",users))
 print(makeRecommandations("Hailey",users))
 print(pearsonCorrelation(users['Angelica'],users['Bill']))
+print(cosineSimilarity(users['Angelica'],users['Veronica']))
