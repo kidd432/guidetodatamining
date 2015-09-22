@@ -45,33 +45,58 @@ class NearestNeighborClassifier:
     def NormalizeColumn(self):
         for i in range(3,5):
             for item in self.data:
-                item[i] = (float(item[i])-self.median[i-3])/self.devations[i-3]
+                item[i] = (float(item[i])-float(self.median[i-3]))/self.devations[i-3]
 
         return self.data
+
     def NormalizeTarget(self,target):
         for i in range(3,5):
-            target[i] = (float(target[i])-self.median[i-3])/self.devations[i-3]
+
+            target[i] = (float(target[i])-float(self.median[i-3]))/self.devations[i-3]
         return target
+
     def nearestNeighbors(self,target):
         finallist= []
-        target = self.NormalizeTarget(target)
+        Normaltarget = self.NormalizeTarget(target)
         for items in self.data:
-            elem = []
-            dis = self.ManhattanDistance(items,target)
-            elem.append(dis,items[0],items[1])
-            finallist.append(elem)
+            dis = self.ManhattanDistance(items,Normaltarget)
+            finallist.append([dis,items[1]])
         return finallist
-    def ManhattanDistance(obj1,obj2):
+    def ManhattanDistance(self,a1,a2):
         value =0 ;
-        for i in(3,len(obj1)):
-            value = sum(abs(obj1[i]-obj2[i]))
+
+        for i in(3,len(a1)-1):
+
+            value += abs(a1[i]-a2[i])
         return value
+
     def classify(self,target):
-        final = []
         final = self.nearestNeighbors(target)
+
         final.sort()
-        return final[0][2]
+        #print(final)
+        return final[0][1]
+    def test(self,testfile):
+        accuracy = 0
+        total =0
+        file = open(testfile)
+        for lines in file:
+            fields =lines.strip().split(',')
+            prediction = self.classify(fields)
+            print(prediction+":"+fields[1])
+
+            if prediction == fields[1]:
+                accuracy += 1
+                total +=1
+            else:
+                total+=1
+        return float(accuracy/total)
+
+
 N = NearestNeighborClassifier("athletic_training")
-print(N.getMedian())
-print(N.getAbsoluteStandardDevations())
-print(N.NormalizeColumn())
+N.getMedian()
+N.getAbsoluteStandardDevations()
+N.NormalizeColumn()
+print(N.test('athletic_test'))
+print(N.classify(['aa','','16','73','160']))
+print(N.classify(['bb','','16','59','90']))
