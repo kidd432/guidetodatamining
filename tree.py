@@ -65,6 +65,17 @@ class Tree:
             self.traversePostorder(root.right)
             print(root.value)
 
+    def Height(self,root):
+        if root ==None:
+            return 0
+        return max(self.Height(root.left),self.Height(root.right))+1
+    def isBST(self,root):
+        if root ==None:
+            return True
+        if(abs(self.Height(root.left)-self.Height(root.right))<=1):
+            return self.isBST(root.left) and self.isBST(root.right)
+        else:
+            return False
 def main():
     root = None
     tree = Tree()
@@ -86,6 +97,10 @@ def main():
     print ("Traverse Postorder:")
     tree.traversePostorder(root)
 
+    print ("Tree Height is:")
+    print(tree.Height(root))
 
+    print ("Is BST")
+    print(tree.isBST(root))
 if __name__ == "__main__":
     main()
